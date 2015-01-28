@@ -1,4 +1,4 @@
-function Movie (title, year, actors, director, imdbRating, imdbVotes, type) {
+function Movie(title, year, actors, director, imdbRating, imdbVotes, type) {
     this.title = title;
     this.year = year;
     this.actors = actors;
@@ -38,4 +38,10 @@ Movie.prototype.getType = function () {
 
 Movie.prototype.containsActor = function (actor) {
     return this.actors.indexOf(actor) > -1;
+};
+
+Movie.prototype.toString = function () {
+    return "Title: " + this.title + "\nYear: " + this.year + "\nActors: " + this.actors +
+        "\nDirector: " + this.director + "\nIMDbRating: " + this.imdbRating +
+        "\nIMDbVotes: " + this.imdbVotes + "\nType: " + this.type;
 };
