@@ -1,46 +1,19 @@
-function httpGetRequest(url) {
-    var request = new XMLHttpRequest();
+"use strict";
 
-    request.open("GET", url, false);
-    request.send(null);
+function searchMovie(name, filter) {
+    var queryHandler, query, result, filteredResult;
 
-    return request.responseText;
+    queryHandler = new Query();
+    query = "https://api.themoviedb.org/3/search/movie?query=" + name;
+    result = queryHandler.queryMovie(query);
+
+    return result;
 }
 
-function createMovieFromId(movieId) {
-    var result, jsonObj, title, year, actors, director, movie, i;
-    result = httpGetRequest("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=5d019883dbd9dab5244bd5bc9df52cd4");
-    jsonObj = JSON.parse(result);
-
-    title = jsonObj.title;
-    year = jsonObj.release_date.substring(0, 4);
-
-    result = httpGetRequest("https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=5d019883dbd9dab5244bd5bc9df52cd4");
-    jsonObj = JSON.parse(result);
-
-    actors = [];
-    for (i = 0; i < jsonObj.cast.length; i++) {
-        actors[i] = jsonObj.cast[i].name;
-    }
-
-    director = "";
-    for (i = 0; i < jsonObj.crew.length; i++) {
-        if (jsonObj.crew[i].job === "Director") {
-            director = jsonObj.crew[i].name;
-            break;
-        }
-    }
-
-    movie = new Movie(title, year, actors, director, undefined, undefined, "Movie");
-    return movie;
+function searchActor(name, filter) {
+    return filter(name);
 }
 
-function search(name, filter) {
-    var result, jsonObj, movie;
-    result = httpGetRequest("https://api.themoviedb.org/3/search/person?query=" + name + "&api_key=5d019883dbd9dab5244bd5bc9df52cd4");
-    //http://www.omdbapi.com/?t=" + name + "&r=json;
-    jsonObj = JSON.parse(result);
-
-    movie = createMovieFromId(jsonObj.results[0].known_for[0].id);
-    console.log(movie.toString());
+function searchShow(name, filter) {
+    return filter(name);
 }
