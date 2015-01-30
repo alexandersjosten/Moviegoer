@@ -21,7 +21,14 @@ function Query() {
     };
 
     createMovieObjects = function (jsonObj) {
-        return jsonObj;
+        var i, movieArray;
+        movieArray = [];
+
+        for(i = 0; i < jsonObj.results.length; i++) {
+            movieArray[i] = createMovieFromId(jsonObj.results[i].id);
+        }
+        
+        return movieArray;
     };
 
     createMovieFromId = function (movieId) {
