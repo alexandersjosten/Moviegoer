@@ -30,16 +30,19 @@ function Query() {
 
         theMovieDBResult = httpGetRequest("https://api.themoviedb.org/3/movie/" + movieId + "?api_key=" + api_key);
         theMovieDBJsonObj = JSON.parse(theMovieDBResult);
+        
+        imdbId = theMovieDBJsonObj.imdb_id;
+        
+        if(imdbId !== "") {
+            omdbResult = httpGetRequest("http://www.omdbapi.com/?i=" + imdbId + "&r=json");
+            omdbJsonObj = JSON.parse(omdbResult);
 
+            imdbRating = omdbJsonObj.imdbRating;
+            imdbVotes = omdbJsonObj.imdbVotes;
+        }
+        
         title = theMovieDBJsonObj.title;
         year = theMovieDBJsonObj.release_date.substring(0, 4);
-        imdbId = theMovieDBJsonObj.imdb_id;
-
-        omdbResult = httpGetRequest("https://http://www.omdbapi.com/?i=" + imdbId + "&r=json");
-        omdbJsonObj = JSON.parse(omdbResult);
-
-        imdbRating = omdbJsonObj.imdbRating;
-        imdbVotes = omdbJsonObj.imdbVotes;
 
         theMovieDBResult = httpGetRequest("https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=" + api_key);
         theMovieDBJsonObj = JSON.parse(theMovieDBResult);
@@ -63,8 +66,8 @@ function Query() {
 
     return {
         queryMovie: function (userQuery) {
-            userQuery = userQuery + "?api_key=" + api_key;
-            return createMovieObjects(httpGetRequest(userQuery));
+            userQuery = userQuery + "&api_key=" + api_key;
+            return createMovieObjects(JSON.parse(httpGetRequest(userQuery)));
         },
 
         queryActor: function (userQuery) {
