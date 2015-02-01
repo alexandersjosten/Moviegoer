@@ -125,8 +125,77 @@ function Query() {
             userQuery = userQuery + "?api_key=" + api_key;
         },
 
-        queryShow: function (userQuery) {
-            userQuery = userQuery + "?api_key=" + api_key;
+        queryShow: function (userQuery, callback) {
+            var shows, totalLength;
+
+            shows = [];
+            userQuery = userQuery + "&api_key=" + api_key;
+
+            function getTVShows() {
+                httpGetRequest(userQuery, createTVShow);
+            }
+
+            function createTVShow(jsonObj) {
+                totalLength = jsonObj.results.length;
+                
+                jsonObj.results.forEach(function (result) {
+                    var id = result.id;
+
+                    httpGetRequest(
+                        "https://api.themoviedb.org/3/tv/" + id + "?api_key=" + api_key,
+                        function(newJsonObj) {
+                            createTVShowFromId(newJsonObj, id);
+                        }
+                    ); 
+                });
+            }
+
+            function createTVShowFromId(jsonObj, showId) {
+                var title, startYear, endYear, seasons, episodes, type;
+
+                title = jsonObj.name;
+                if(jsonObj.first_air_date) {
+                    startYear = jsonObj.first_air_date.substring(0, 4);
+                }
+
+                if(jsonObj.last_air_date) {
+                    endYear = jsonObj.last_air_date.substring(0, 4);
+                }
+                
+                status = jsonObj.status;
+                seasons = jsonObj.number_of_seasons;
+                episodes = jsonObj.number_of_episodes;
+                type = "TV Show";
+
+                httpGetRequest(
+                    "https://api.themoviedb.org/3/tv/" + showId + "/credits?api_key=" + api_key,
+                    function(newJsonObj) {
+                        getCastAndCrew(newJsonObj, title, startYear, endYear, status, seasons, episodes, type);
+                    }
+                );
+            }
+
+            function getCastAndCrew(jsonObj, title, startYear, endYear, status, seasons, episodes, type) {
+                var actors, i;
+                
+                actors = [];
+                for (i = 0; i < jsonObj.cast.length; i++) {
+                    actors[i] = jsonObj.cast[i].name;
+                }
+
+                insertShow(title, startYear, endYear, status, seasons, episodes, actors, type);
+            }
+
+            function insertShow(title, startYear, endYear, status, seasons, episodes, actors, type) {
+                var tvShow = new TVShow(title, startYear, endYear, status, seasons, episodes, actors, type);
+                shows.push(tvShow);
+                console.log(shows);
+                if(shows.length === totalLength) {
+                    callback(shows);
+                }
+            }
+
+            getTVShows();
         }
     };
 }
