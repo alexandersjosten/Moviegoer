@@ -74,7 +74,6 @@ function Query() {
         }
 
         function useOMDb(jsonObj, title, year, movieId) {
-            //console.log(jsonObj + "      " + title + "      " + year);
             httpGetRequest(
                 "https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=" + api_key,
                 function (newJsonObj) {
@@ -224,7 +223,6 @@ function Query() {
             userQuery = userQuery + "&api_key=" + api_key;
 
             function doQuery() {
-                console.log(userQuery);
                 httpGetRequest(userQuery, parseActorsFromQuery);
             }
             

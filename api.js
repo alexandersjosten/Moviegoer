@@ -13,7 +13,6 @@ function searchActor(name, filter) {
 
     queryHandler = new Query();
     query = "https://api.themoviedb.org/3/search/person?query=" + name;
-    console.log(query);
     queryHandler.queryActor(query, filter);
 }
 
