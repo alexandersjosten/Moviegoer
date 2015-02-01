@@ -47,6 +47,6 @@ TVShow.prototype.containsActor = function (actor) {
 
 TVShow.prototype.toString = function () {
     return "Title: " + this.title + "\nYear started: " + this.yearStarted + "\nYear ended: " + this.yearEnded +
-        "\nNumber of seasons: " + this.seaons + "\nNumber of episodes: " + this.episodes +
-        "\Actors: " + this.actors + "\nType: " + this.type;
+        "\nNumber of seasons: " + this.seasons + "\nNumber of episodes: " + this.episodes +
+        "\nActors: " + this.actors + "\nType: " + this.type;
 };
